@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>상품 리뷰</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    /* 리뷰 리스트 */
+    .review-list {
+      margin-bottom: 30px;
+    }
+    .review-item {
+      border-bottom: 1px solid #ddd;
+      padding: 12px 0;
+    }
+    .review-item:last-child {
+      border-bottom: none;
+    }
+    .review-author {
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+    .review-date {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 8px;
+    }
+    .review-content {
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    /* 리뷰 작성 폼 */
+    .review-form {
+      border: 1px solid #ccc;
+      padding: 15px;
+      border-radius: 6px;
+      max-width: 600px;
+    }
+    .review-form label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .review-form input[type="text"],
+    .review-form textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    .review-form textarea {
+      resize: vertical;
+      height: 100px;
+    }
+    .review-form button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .review-form button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+<h1>상품 리뷰</h1>
+
+<!-- 리뷰 목록 -->
+<div class="review-list" id="reviewList">
+  <!-- 리뷰 아이템 예시 -->
+  <div class="review-item">
+    <div class="review-author">홍길동</div>
+    <div class="review-date">2025-08-10</div>
+    <div class="review-content">제품이 정말 좋아요! 강아지가 잘 먹네요.</div>
+  </div>
+  <div class="review-item">
+    <div class="review-author">김철수</div>
+    <div class="review-date">2025-08-09</div>
+    <div class="review-content">배송도 빠르고 포장도 깔끔했습니다.</div>
+  </div>
+</div>
+
+<!-- 리뷰 작성 폼 -->
+<div class="review-form">
+  <h2>리뷰 작성하기</h2>
+  <form id="reviewForm">
+    <label for="author">작성자 이름</label>
+    <input type="text" id="author" name="author" required maxlength="20" />
+
+    <label for="content">리뷰 내용</label>
+    <textarea id="content" name="content" required maxlength="500"></textarea>
+
+    <button type="submit">리뷰 등록</button>
+  </form>
+</div>
+
+<script>
+  const reviewForm = document.getElementById('reviewForm');
+  const reviewList = document.getElementById('reviewList');
+
+  reviewForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const author = reviewForm.author.value.trim();
+    const content = reviewForm.content.value.trim();
+    if (!author || !content) {
+      alert('모든 항목을 입력해주세요.');
+      return;
+    }
+
+    const today = new Date().toISOString().split('T')[0];
+
+    // 새 리뷰 엘리먼트 생성
+    const newReview = document.createElement('div');
+    newReview.classList.add('review-item');
+    newReview.innerHTML = `
+      <div class="review-author">${author}</div>
+      <div class="review-date">${today}</div>
+      <div class="review-content">${content}</div>
+    `;
+
+    // 리뷰 목록 앞에 새 리뷰 추가
+    reviewList.insertBefore(newReview, reviewList.firstChild);
+
+    // 폼 초기화
+    reviewForm.reset();
+
+    alert('리뷰가 등록되었습니다!');
+  });
+</script>
+
+</body>
+</html>

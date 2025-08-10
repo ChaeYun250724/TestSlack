@@ -1,0 +1,109 @@
+<section>
+  <style>
+    body {
+      font-family: Arial, sans-serif; margin: 20px; color: #2c3e50;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%; border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd; padding: 12px; text-align: center;
+    }
+    th {
+      background-color: #27ae60; color: white;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    select {
+      padding: 6px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+    button {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      background-color: #e74c3c;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+    }
+    button:hover {
+      background-color: #a22c22;
+    }
+  </style>
+
+
+<h2>주문 관리</h2>
+<table>
+  <thead>
+  <tr>
+    <th>주문번호</th>
+    <th>회원명</th>
+    <th>상품명</th>
+    <th>수량</th>
+    <th>총 금액</th>
+    <th>주문일</th>
+    <th>상태</th>
+    <th>관리</th>
+  </tr>
+  </thead>
+  <tbody id="orderTableBody">
+  <tr>
+    <td>1001</td>
+    <td>홍길동</td>
+    <td>강아지 사료 소형견용</td>
+    <td>2</td>
+    <td>30,000원</td>
+    <td>2025-08-01</td>
+    <td>
+      <select onchange="changeStatus(1001, this.value)">
+        <option value="주문접수" selected>주문접수</option>
+        <option value="배송중">배송중</option>
+        <option value="배송완료">배송완료</option>
+        <option value="취소">취소</option>
+      </select>
+    </td>
+    <td>
+      <button onclick="deleteOrder(1001)">삭제</button>
+    </td>
+  </tr>
+  <tr>
+    <td>1002</td>
+    <td>김영희</td>
+    <td>강아지 간식 모음</td>
+    <td>1</td>
+    <td>8,000원</td>
+    <td>2025-08-02</td>
+    <td>
+      <select onchange="changeStatus(1002, this.value)">
+        <option value="주문접수" selected>주문접수</option>
+        <option value="배송중">배송중</option>
+        <option value="배송완료">배송완료</option>
+        <option value="취소">취소</option>
+      </select>
+    </td>
+    <td>
+      <button onclick="deleteOrder(1002)">삭제</button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<script>
+  function changeStatus(orderId, status) {
+    alert(`주문번호 ${orderId} 상태를 '${status}'로 변경합니다.`);
+  }
+  function deleteOrder(orderId) {
+    if(confirm(`주문번호 ${orderId}을 삭제하시겠습니까?`)) {
+      alert('삭제 처리 실행');
+    }
+  }
+</script>
+</section>
+

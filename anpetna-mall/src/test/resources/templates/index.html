@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <title>애견용품 쇼핑몰</title>
+</head>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f5f5;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+  #container {
+    flex-grow: 1;
+    display: flex;
+    min-height: calc(100vh - 50px);
+  }
+  #sidebar {
+    width: 250px;
+    background: #2c3e50;
+    color: white;
+    overflow-y: auto;
+    height: 100vh;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    transition: transform 0.3s ease;
+    z-index: 1000;
+  }
+  #sidebar.collapsed {
+    transform: translateX(-100%);
+  }
+  #main-content {
+    margin-left: 250px;
+    padding: 20px;
+    background: white;
+    flex-grow: 1;
+    transition: margin-left 0.3s ease;
+    min-height: 100vh;
+    margin-top: 60px;
+  }
+  #main-content.collapsed {
+    margin-left: 0;
+  }
+  #header nav {
+    background: white;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1100;
+  }
+  #footer {
+    background: #2c3e50;
+    color: white;
+    padding: 15px;
+    text-align: center;
+  }
+  /* mypage dropdown */
+  .mypage {
+    position: relative;
+  }
+  .mypage-menu {
+    position: absolute;
+    right: 0;
+    top: 40px;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgb(0 0 0 / 0.1);
+    display: none;
+    min-width: 140px;
+    border-radius: 4px;
+    z-index: 100;
+  }
+  .mypage-menu.active {
+    display: block;
+  }
+  .mypage-menu a {
+    display: block;
+    padding: 10px 15px;
+    color: #2c3e50;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+  .mypage-menu a:hover {
+    background: #f0f0f0;
+  }
+
+  /* sidebar menu items */
+  #sidebar ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  #sidebar ul li {
+    padding: 12px 20px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    user-select: none;
+  }
+  #sidebar ul li:hover {
+    background: #34495e;
+  }
+  #sidebar .menu-category {
+    padding: 10px 20px 5px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    color: #bdc3c7;
+    background: #22313f;
+  }
+
+  /* 반응형 */
+  @media (max-width: 768px) {
+    #sidebar {
+      position: fixed;
+      height: 100vh;
+      top: 60px;
+      left: 0;
+      z-index: 2000;
+    }
+    #sidebar.collapsed {
+      transform: translateX(-100%);
+    }
+    #main-content {
+      margin-left: 0;
+    }
+  }
+</style>
+  <body>
+<div id="header-placeholder"></div>
+<div id="container">
+  <div id="sidebar-placeholder"></div>
+  <main id="main-content">
+    <h1>환영합니다!</h1>
+    <p>애견용품 쇼핑몰에 오신 것을 환영합니다.</p>
+  </main>
+</div>
+<div id="footer-placeholder"></div>
+
+</body>
+<script>
+
+
+  async function loadHTML(id, url) {
+    try {
+      const res = await fetch(url);
+      if(!res.ok) throw new Error('Network response not ok');
+      const text = await res.text();
+      document.getElementById(id).innerHTML = text;
+      return true;
+    } catch(e) {
+      document.getElementById(id).innerHTML = `<p>로딩 실패: ${url}</p>`;
+      return false;
+    }
+  }
+
+  async function init() {
+    const hLoaded = await loadHTML('header-placeholder', '../templates/layout/header.html');
+    const sLoaded = await loadHTML('sidebar-placeholder', '../templates/layout/sideMenu.html');
+    await loadHTML('footer-placeholder', '../templates/layout/footer.html');
+
+    if(hLoaded && sLoaded) {
+      bindEvents();
+    }
+  }
+
+  function bindEvents() {
+    // 사이드바 토글
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('main-content');
+    const toggleBtn = document.getElementById('sidebarToggle');
+
+    toggleBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('collapsed');
+      mainContent.classList.toggle('collapsed');
+    });
+
+    // 마이페이지 드롭다운
+    const mypageBtn = document.getElementById('mypageBtn');
+    const mypageMenu = document.getElementById('mypageMenu');
+
+    mypageBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // 클릭 이벤트 버블링 막기
+      mypageMenu.classList.toggle('active');
+    });
+
+    document.addEventListener('click', () => {
+      mypageMenu.classList.remove('active');
+    });
+
+    // 사이드바 메뉴 클릭 이벤트
+    const adminMenu = document.getElementById('admin-menu');
+    const userMenu = document.getElementById('user-menu');
+    const content = document.getElementById('main-content');
+
+    async function loadPageContent(page) {
+      switch (page) {
+        case 'product-management':
+          try {
+            const res = await fetch('item/itemList.html');
+            if (!res.ok) throw new Error('페이지 로드 실패');
+            const html = await res.text();
+            content.innerHTML = html;
+          } catch (e) {
+            content.innerHTML = `<p>상품 상세 페이지 로드 실패: ${e.message}</p>`;
+          }
+          break;
+        case 'sales-statistics':
+          try {
+            const res = await fetch('admin/salesStatistics.html');
+            if (!res.ok) throw new Error('페이지 로드 실패');
+            const html = await res.text();
+            content.innerHTML = html;
+          } catch (e) {
+            content.innerHTML = `<p>상품 상세 페이지 로드 실패: ${e.message}</p>`;
+          }
+          break;
+        case 'order-management':
+          try {
+            const res = await fetch('admin/orderManage.html');
+            if (!res.ok) throw new Error('페이지 로드 실패');
+            const html = await res.text();
+            content.innerHTML = html;
+          } catch (e) {
+            content.innerHTML = `<p>상품 상세 페이지 로드 실패: ${e.message}</p>`;
+          }
+          break;
+        case 'cart':
+          try {
+            const res = await fetch('cart/cart.html');
+            if (!res.ok) throw new Error('페이지 로드 실패');
+            const html = await res.text();
+            content.innerHTML = html;
+          } catch (e) {
+            content.innerHTML = `<p>상품 상세 페이지 로드 실패: ${e.message}</p>`;
+          }
+          break;
+        case 'wishlist':
+          try {
+            const res = await fetch('cart/wishList.html');
+            if (!res.ok) throw new Error('페이지 로드 실패');
+            const html = await res.text();
+            content.innerHTML = html;
+          } catch (e) {
+            content.innerHTML = `<p>상품 상세 페이지 로드 실패: ${e.message}</p>`;
+          }
+          break;
+        case 'product-list':
+          content.innerHTML = `<h2>상품 리스트</h2><p>판매 중인 상품들을 확인하세요.</p>`;
+          break;
+        case 'product-detail':
+          content.innerHTML = `<h2>상품 상세 페이지</h2><p>상품에 대한 상세 정보를 확인할 수 있습니다.</p>`;
+          break;
+        case 'order-history':
+          try {
+            const res = await fetch('order/orderList.html');
+            if (!res.ok) throw new Error('페이지 로드 실패');
+            const html = await res.text();
+            content.innerHTML = html;
+          } catch (e) {
+            content.innerHTML = `<p>상품 상세 페이지 로드 실패: ${e.message}</p>`;
+          }
+          break;
+        default:
+          content.innerHTML = `<h1>환영합니다!</h1><p>애견용품 쇼핑몰에 오신 것을 환영합니다.</p>`;
+      }
+    }
+
+    adminMenu.addEventListener('click', (e) => {
+      if(e.target.tagName === 'LI'){
+        loadPageContent(e.target.getAttribute('data-page'));
+        if(window.innerWidth <= 768){
+          // 모바일이면 메뉴 닫기
+          sidebar.classList.add('collapsed');
+          mainContent.classList.add('collapsed');
+        }
+      }
+    });
+    userMenu.addEventListener('click', (e) => {
+      if(e.target.tagName === 'LI'){
+        loadPageContent(e.target.getAttribute('data-page'));
+        if(window.innerWidth <= 768){
+          sidebar.classList.add('collapsed');
+          mainContent.classList.add('collapsed');
+        }
+      }
+    });
+  }
+
+  init();
+
+</script>
+</html>

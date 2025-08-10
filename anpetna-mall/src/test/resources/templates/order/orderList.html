@@ -1,0 +1,62 @@
+<section class="order-history">
+    <h2>주문 목록</h2>
+
+    <table class="order-table">
+        <thead>
+        <tr>
+            <th>주문번호</th>
+            <th>주문일</th>
+            <th>총액</th>
+            <th>상태</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>101</td>
+            <td>2025-08-10</td>
+            <td>28,000원</td>
+            <td>배송중</td>
+        </tr>
+        <tr>
+            <td>102</td>
+            <td>2025-08-08</td>
+            <td>20,000원</td>
+            <td>배송완료</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <style>
+        section.order-history {
+            max-width: 900px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        section.order-history h2 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            color: #2c3e50;
+        }
+
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .order-table th, .order-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .order-table th {
+            background: #f0f0f0;
+            color: #34495e;
+        }
+    </style>
+</section>

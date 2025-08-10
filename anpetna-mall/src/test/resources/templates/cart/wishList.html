@@ -1,0 +1,93 @@
+<section class="wishlist">
+  <h2>찜한 상품</h2>
+
+  <ul class="wishlist-items">
+    <li>
+      <img src="/images/toy1.jpg" alt="강아지 공 장난감" />
+      <div class="item-info">
+        <h3>강아지 공 장난감</h3>
+        <p>가격: 8,000원</p>
+        <button class="remove-btn">삭제</button>
+      </div>
+    </li>
+    <li>
+      <img src="/images/accessory1.jpg" alt="목걸이 - 블루" />
+      <div class="item-info">
+        <h3>목걸이 - 블루</h3>
+        <p>가격: 12,000원</p>
+        <button class="remove-btn">삭제</button>
+      </div>
+    </li>
+  </ul>
+
+  <style>
+    section.wishlist {
+      max-width: 900px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    section.wishlist h2 {
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+      color: #2c3e50;
+    }
+
+    .wishlist-items {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .wishlist-items li {
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      width: 220px;
+      background: #fafafa;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      user-select: none;
+    }
+
+    .wishlist-items img {
+      width: 100%;
+      height: 150px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+
+    .item-info h3 {
+      margin: 0 0 8px;
+      font-size: 1.1rem;
+      color: #34495e;
+      text-align: center;
+    }
+
+    .item-info p {
+      margin: 0 0 12px;
+      color: #555;
+      font-weight: bold;
+    }
+
+    .remove-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+
+    .remove-btn:hover {
+      background: #c0392b;
+    }
+  </style>
+</section>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>관리자 문의 및 답글</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    /* 문의 리스트 */
+    .qna-list {
+      max-width: 700px;
+      margin-bottom: 30px;
+    }
+    .qna-item {
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    .qna-question {
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .qna-author {
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 8px;
+    }
+    .qna-reply {
+      background-color: #f7f9fc;
+      border-left: 3px solid #007bff;
+      padding: 10px 15px;
+      font-size: 14px;
+      color: #333;
+      white-space: pre-wrap;
+      margin-top: 10px;
+      border-radius: 4px;
+    }
+
+    /* 답글 작성 폼 */
+    .reply-form {
+      max-width: 700px;
+      border: 1px solid #ccc;
+      padding: 15px;
+      border-radius: 6px;
+    }
+    .reply-form label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .reply-form textarea {
+      width: 100%;
+      padding: 8px;
+      font-size: 14px;
+      height: 100px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      resize: vertical;
+      margin-bottom: 12px;
+    }
+    .reply-form button {
+      background-color: #007bff;
+      border: none;
+      color: white;
+      padding: 10px 18px;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .reply-form button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+<h1>관리자 문의 및 답글</h1>
+
+<div class="qna-list" id="qnaList">
+  <!-- 문의 항목 예시 -->
+  <div class="qna-item" data-id="1">
+    <div class="qna-question">제품 배송은 얼마나 걸리나요?</div>
+    <div class="qna-author">작성자: 박지은 (2025-08-08)</div>
+    <div class="qna-reply" id="reply-1">보통 2~3일 이내에 배송됩니다.</div>
+  </div>
+  <div class="qna-item" data-id="2">
+    <div class="qna-question">환불 정책이 어떻게 되나요?</div>
+    <div class="qna-author">작성자: 김민수 (2025-08-07)</div>
+    <div class="qna-reply" id="reply-2">상품 수령 후 7일 이내 환불 가능하며, 미개봉 상태여야 합니다.</div>
+  </div>
+</div>
+
+<!-- 답글 작성 폼 -->
+<div class="reply-form">
+  <h2>답글 작성하기</h2>
+  <form id="replyForm">
+    <label for="qnaSelect">문의 선택</label>
+    <select id="qnaSelect" required>
+      <option value="">문의 선택하세요</option>
+    </select>
+
+    <label for="replyContent">답글 내용</label>
+    <textarea id="replyContent" required maxlength="1000"></textarea>
+
+    <button type="submit">답글 등록</button>
+  </form>
+</div>
+
+<script>
+  const qnaList = document.getElementById('qnaList');
+  const qnaSelect = document.getElementById('qnaSelect');
+  const replyForm = document.getElementById('replyForm');
+  const replyContent = document.getElementById('replyContent');
+
+  // 문의 목록에서 셀렉트 옵션 채우기
+  const qnaItems = qnaList.querySelectorAll('.qna-item');
+  qnaItems.forEach(item => {
+    const id = item.getAttribute('data-id');
+    const question = item.querySelector('.qna-question').textContent;
+    const option = document.createElement('option');
+    option.value = id;
+    option.textContent = question;
+    qnaSelect.appendChild(option);
+  });
+
+  // 답글 등록 이벤트
+  replyForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const selectedId = qnaSelect.value;
+    const replyText = replyContent.value.trim();
+
+    if (!selectedId) {
+      alert('답글을 달 문의를 선택하세요.');
+      return;
+    }
+    if (!replyText) {
+      alert('답글 내용을 입력하세요.');
+      return;
+    }
+
+    const replyDiv = document.getElementById('reply-' + selectedId);
+    if (replyDiv) {
+      replyDiv.textContent = replyText;
+    } else {
+      // 답글 영역 없으면 새로 생성
+      const qnaItem = qnaList.querySelector(`.qna-item[data-id="${selectedId}"]`);
+      if (qnaItem) {
+        const newReply = document.createElement('div');
+        newReply.classList.add('qna-reply');
+        newReply.id = 'reply-' + selectedId;
+        newReply.textContent = replyText;
+        qnaItem.appendChild(newReply);
+      }
+    }
+
+    alert('답글이 등록되었습니다.');
+    replyForm.reset();
+  });
+</script>
+
+</body>
+</html>
